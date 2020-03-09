@@ -5,19 +5,22 @@ project_name: "untitled"
 
 nodes:
   - appliance_name: "EthernetSwitch"
+    appliance_type: "Built-in"
     node_name: EthSwitch1
     x: 0
     y: 0
   - appliance_name: "NAT"
+    appliance_type: "Built-in"
     node_name: Nat1
     x: 0
     y: 250
   - appliance_name: "TestNode"
+    appliance_type: "Docker"
     node_name: TestNode1
     instances:
     x: 50
     y: -170
-    ip: "192.168.122.10 255.255.255.0"
+    ip: "192.168.122.10"
     gw: "192.168.122.1"
 
 links:

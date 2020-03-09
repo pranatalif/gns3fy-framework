@@ -1,16 +1,16 @@
 from gns3fy import Gns3Connector, Project, Node, Link
-import json
 from json import dumps
 import yaml
 import time
+from telnetlib import Telnet
+import sys
 
 global CONFIG
 global server
-global projectID
+global projectObj
 
 def getVersion(server):
-    print(server.get_version())
-    #exit(1)
+    print(str(server.get_version()) + "...", end="")
 
 def listProject(server):
     print(server.projects_summary())
@@ -24,9 +24,8 @@ def createProject(server, project):
     #else:
     #    print("Creating the project...", end="")
     projectObj.create()
-    projectID = projectObj.project_id
     print("Project " + projectObj.name + " created. ID: " + projectObj.project_id + "...", end="")
-    return projectID
+    return projectObj
 
 def deleteProject(id):
     server = Gns3Connector(url="http://"+CONFIG["gns3_server"]+":"+CONFIG["gns3_port"])
@@ -37,8 +36,9 @@ def createNodes(server, projectID):
     for nodes in CONFIG["nodes"]:
         node = Node(project_id=projectID, connector=server, template=nodes["appliance_name"], name=nodes["node_name"], x=nodes["x"], y=nodes["y"])
         node.create()
-        nodeDict.update({node.name : node.node_id})
-    
+        nodeDict.update({node.name : node.node_id})      
+        node.start()
+
     return nodeDict
 
 def createLinks(server, projectID, nodeDict):  
@@ -54,6 +54,34 @@ def createLinks(server, projectID, nodeDict):
         link = Link(project_id=projectID, connector=server, nodes=nodeCombination)
         link.create()
 
+def findNodeforIPConf(project):
+    netmask = "255.255.255.0"
+    broadcast = "192.168.122.255"
+    summary = project.nodes_summary(is_print=False)
+
+    for node in CONFIG["nodes"]:
+        if "ip" in node:
+            ip = node["ip"]
+            gw = node["gw"]
+            for node in summary:
+                if str(node[2]) == "5000" or str(node[2]) == "None":
+                    continue
+                else:
+                    nodePort = str(node[2])
+                    configureIP(ip, netmask, broadcast, gw, nodePort)
+
+def configureIP(ip, netmask, broadcast, gateway, port):
+    try:
+        telnet = Telnet(CONFIG["gns3_server"], port)
+        cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
+        telnet.write(("echo -e "+cmdIP+" > /etc/network/interfaces\r\n").encode())
+        time.sleep(1) # should have wait before 2 commands, otherwise the file not changed.
+        telnet.write(b"/etc/init.d/networking restart\r\n")                   
+    except:
+        print("Unable to connect to Telnet server: ", sys.exc_info()[0])
+
+    telnet.close()
+    
 
 if __name__ == "__main__":
     ### Read configuration file
@@ -61,26 +89,39 @@ if __name__ == "__main__":
         CONFIG = yaml.full_load(config_file)
       
     ### Set connectivity and get the server version
+    print("[1/6] Connecting to server...", end="")
     server = Gns3Connector(url="http://"+CONFIG["gns3_server"]+":"+CONFIG["gns3_port"]) 
     getVersion(server)
+    print("OK")
+    time.sleep(1)
     
     ### List all created projects
     #listProject(server)
 
     ### Create project and get its ID
-    print("Creating GNS3 project...", end="")
-    projectID = createProject(server, CONFIG["project_name"])
+    print("[2/6] Creating GNS3 project...", end="")
+    projectObj = createProject(server, CONFIG["project_name"])
     print("OK")
     time.sleep(1)
 
+    ### Check appliance existance. put all appliance_name from nodes (in config files) in Array and compare with server.template_summary() (optional)
+
     ### Create nodes
-    print("Creating nodes...", end="")
-    nodeDict = createNodes(server, projectID)
+    print("[3/6] Creating nodes...", end="")
+    nodeDict = createNodes(server, projectObj.project_id)
     print("OK")
     time.sleep(1)
 
     ### Create links
-    print("Creating links...", end="")
-    createLinks(server, projectID, nodeDict)
+    print("[4/6] Creating links...", end="")
+    createLinks(server, projectObj.project_id, nodeDict)
+    print("OK")
+    time.sleep(1)
+
+    ### Set links filter
+
+    ### Configure IP
+    print("[5/6] Configuring IP...", end="")
+    findNodeforIPConf(projectObj)
     print("OK")
     time.sleep(1)
