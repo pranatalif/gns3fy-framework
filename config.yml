@@ -5,31 +5,108 @@ project_name: "untitled"
 
 nodes:
   - appliance_name: "EthernetSwitch"
-    appliance_type: "Built-in"
     node_name: EthSwitch1
     x: 0
-    y: 0
+    y: -200
+  - appliance_name: "EthernetSwitch"
+    node_name: EthSwitch2
+    x: 210
+    y: 180
+  - appliance_name: "EthernetSwitch"
+    node_name: EthSwitch3
+    x: -210
+    y: 180
   - appliance_name: "NAT"
-    appliance_type: "Built-in"
     node_name: Nat1
-    x: 0
-    y: 250
-  - appliance_name: "TestNode"
-    appliance_type: "Docker"
-    node_name: TestNode1
-    instances:
-    x: 50
-    y: -170
+    x: -45
+    y: 17
+  # - appliance_name: "NodeExporter" # Keycloak must run first before HLS and Test
+  #   node_name: NodeExporter1
+  #   x: 0
+  #   y: -200
+  #   ip: "192.168.122.20"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "AlertManager" # Keycloak must run first before HLS and Test
+  #   node_name: AlertManager1
+  #   x: -355
+  #   y: 40
+  #   ip: "192.168.122.20"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Prometheus" # Keycloak must run first before HLS and Test
+  #   node_name: Prometheus1
+  #   x: -150
+  #   y: -370
+  #   ip: "192.168.122.20"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Grafana" # Keycloak must run first before HLS and Test
+  #   node_name: Grafana1
+  #   x: -410
+  #   y: 190
+  #   ip: "192.168.122.20"
+  #   gw: "192.168.122.1"
+  - appliance_name: "Keycloak" # Keycloak must run first before HLS and Test
+    node_name: Keycloak1
+    x: -130
+    y: -360
+    ip: "192.168.122.20"
+    gw: "192.168.122.1"
+  - appliance_name: "Hls"
+    node_name: Hls1
+    x: 150
+    y: -370
     ip: "192.168.122.10"
+    gw: "192.168.122.1"
+  
+  # - appliance_name: "Webterm"
+  #   node_name: Webterm1
+  #   x: 360
+  #   y: 105
+  #   ip: "192.168.122.30"
+  #   gw: "192.168.122.1"
+  - appliance_name: "Test"
+    node_name: TestNode1
+    x: 240
+    y: 20
+    ip: "192.168.122.40"
     gw: "192.168.122.1"
 
 links:
+  ### switch cluster
   - node1: EthSwitch1
     port_num1: 0
     node2: Nat1
     port_num2: 0
   - node1: EthSwitch1
     port_num1: 1
+    node2: EthSwitch2
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 1
+    node2: EthSwitch3
+    port_num2: 0
+  #!!!Uncommenting this link will max CPU usage by GNS3server!!!
+  # - node1: EthSwitch1 
+  #   port_num1: 2
+  #   node2: EthSwitch3
+  #   port_num2: 1
+
+  ### SUT cluster
+  - node1: EthSwitch1
+    port_num1: 3
+    node2: Keycloak1
+    port_num2: 0
+  - node1: EthSwitch1
+    port_num1: 4
+    node2: Hls1
+    port_num2: 0
+
+  ### Testing cluster
+  # - node1: EthSwitch2
+  #   port_num1: 2
+  #   node2: Webterm1
+  #   port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 3
     node2: TestNode1
     port_num2: 0
 

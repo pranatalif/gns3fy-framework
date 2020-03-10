@@ -1,13 +1,15 @@
 from gns3fy import Gns3Connector, Project, Node, Link
 from json import dumps
+from telnetlib import Telnet
 import yaml
 import time
-from telnetlib import Telnet
 import sys
 
 global CONFIG
+global COMMAND
 global server
 global projectObj
+global telnet
 
 def getVersion(server):
     print(str(server.get_version()) + "...", end="")
@@ -18,6 +20,7 @@ def listProject(server):
 def createProject(server, project):
     projectObj = Project(name=project, connector=server)
     getProject = next((project for project in server.projects_summary(is_print=False) if project[0] == projectObj.name), "Project not found")
+    #print(getProject)
     if getProject[0] == projectObj.name:
         print("Project name existed, re-creating the project...", end="")
         deleteProject(getProject[1])
@@ -28,7 +31,7 @@ def createProject(server, project):
     return projectObj
 
 def deleteProject(id):
-    server = Gns3Connector(url="http://"+CONFIG["gns3_server"]+":"+CONFIG["gns3_port"])
+    #server = Gns3Connector(url="http://"+CONFIG["gns3_server"]+":"+CONFIG["gns3_port"])
     server.delete_project(id)
 
 def createNodes(server, projectID):
@@ -38,6 +41,7 @@ def createNodes(server, projectID):
         node.create()
         nodeDict.update({node.name : node.node_id})      
         node.start()
+        time.sleep(2)
 
     return nodeDict
 
@@ -58,35 +62,53 @@ def findNodeforIPConf(project):
     netmask = "255.255.255.0"
     broadcast = "192.168.122.255"
     summary = project.nodes_summary(is_print=False)
+    
+    for nodeInConfig in CONFIG["nodes"]:
+        if "ip" in nodeInConfig:
+            ip = nodeInConfig["ip"]
+            gw = nodeInConfig["gw"]
+            #print(nodeInConfig["node_name"])
+            for nodeInSummary in summary:
+                if nodeInConfig["node_name"] in nodeInSummary[0]:
+                    telnet = configureIP(ip, netmask, broadcast, gw, nodeInSummary[2])
+                    runService(telnet, nodeInConfig["appliance_name"])
+                #else:
+                 #   print(template[4])
 
-    for node in CONFIG["nodes"]:
-        if "ip" in node:
-            ip = node["ip"]
-            gw = node["gw"]
-            for node in summary:
-                if str(node[2]) == "5000" or str(node[2]) == "None":
-                    continue
-                else:
-                    nodePort = str(node[2])
-                    configureIP(ip, netmask, broadcast, gw, nodePort)
 
 def configureIP(ip, netmask, broadcast, gateway, port):
     try:
         telnet = Telnet(CONFIG["gns3_server"], port)
         cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
         telnet.write(("echo -e "+cmdIP+" > /etc/network/interfaces\r\n").encode())
-        time.sleep(1) # should have wait before 2 commands, otherwise the file not changed.
+        time.sleep(2) # should have wait before 2 commands, otherwise the file not changed.
         telnet.write(b"/etc/init.d/networking restart\r\n")                   
     except:
         print("Unable to connect to Telnet server: ", sys.exc_info()[0])
 
-    telnet.close()
+    return telnet
     
+def runService(telnet, service):
+    if service == "Keycloak":
+        time.sleep(15)
+    else:
+        time.sleep(5)
+
+    for commands in COMMAND["commands"]:
+        if commands["name"] == service:
+            telnet.write(str(commands["workdir"]).encode())
+            time.sleep(2)
+            telnet.write(str(commands["command"]).encode())
+    
+    telnet.close()
 
 if __name__ == "__main__":
     ### Read configuration file
     with open("config.yml") as config_file:
         CONFIG = yaml.full_load(config_file)
+
+    with open("run-command.yml") as command_file:
+        COMMAND = yaml.full_load(command_file)
       
     ### Set connectivity and get the server version
     print("[1/6] Connecting to server...", end="")
@@ -121,7 +143,13 @@ if __name__ == "__main__":
     ### Set links filter
 
     ### Configure IP
-    print("[5/6] Configuring IP...", end="")
+    print("[5/6] Configuring IP and Running Services...", end="")
     findNodeforIPConf(projectObj)
     print("OK")
     time.sleep(1)
+
+    ### Run services
+    #print("[5/6] Run Services...", end="")
+    #runService(telnet)
+    #print("OK")
+    #time.sleep(1)

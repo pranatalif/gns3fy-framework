@@ -1,0 +1,34 @@
+# ### make sure all docker has the WORKDIR command where the file need to be executed
+# # WORKDIR /usr/test
+# Test: "java -jar seleniumTesting.jar\r\n"
+
+# #WORKDIR: /usr/src/app
+# Hls: "sh app.sh\r\n"
+
+# #WORKDIR: none
+# Keycloak: "/opt/jboss/keycloak/docker-entrypoint.sh -b 0.0.0.0 -Dkeycloak.import=/opt/jboss/keycloak/realm-export.json\r\n"
+
+  ### make sure all docker has the WORKDIR command where the file need to be executed
+commands:
+  # - name: NodeExporter
+  #   workdir: "cd /usr/src/node-exporter\r\n"
+  #   command: "./node_exporter\r\n"
+  # - name: AlertManager
+  #   workdir: "cd /usr/src/alertmanager\r\n"
+  #   command: "./alertmanager --config.file=/usr/src/alertmanager/alertmanager.yml --storage.path=/usr/src/alertmanager\r\n"
+  # - name: Prometheus
+  #   workdir: "cd /usr/src/\r\n"
+  #   command: "/usr/src/prometheus/prometheus --config.file=/usr/src/prometheus/prometheus.yml --web.console.templates=/usr/src/prometheus/consoles --web.console.libraries=/usr/src/prometheus/console_libraries\r\n"
+  # - name: Grafana
+  #   workdir: "cd /usr/src/\r\n"
+  #   command: "/usr/src/grafana/bin/grafana-server --config=/usr/src/grafana/conf/defaults.ini --homepath=/usr/src/grafana/\r\n"
+  - name: Keycloak
+    workdir: "cd /opt/jboss/keycloak\r\n"
+    command: "sh docker-entrypoint.sh -b 0.0.0.0 -Dkeycloak.import=/opt/jboss/keycloak/realm-export.json\r\n"
+  - name: Hls
+    workdir: "cd /usr/src/app\r\n"
+    command: "sh app.sh\r\n"
+  - name: Test
+    workdir: "cd /usr/test\r\n"
+    command: "java -jar seleniumTesting.jar\r\n"
+  
