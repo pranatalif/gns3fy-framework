@@ -34,6 +34,17 @@ def deleteProject(id):
     #server = Gns3Connector(url="http://"+CONFIG["gns3_server"]+":"+CONFIG["gns3_port"])
     server.delete_project(id)
 
+def checkAppliance(server):
+    for nodes in CONFIG["nodes"]:
+        applianceName = nodes["appliance_name"]
+        search = next((appliance for appliance in server.templates_summary(is_print=False) if appliance[0] == applianceName), None)
+        if search == None:
+            print("Appliance", applianceName, "not found, check your configuration file...!")
+            print("exiting the framework...", end="")
+            break
+        
+    print("Checking appliance passed...", end="")
+
 def createNodes(server, projectID):
     nodeDict = dict()
     for nodes in CONFIG["nodes"]:
@@ -90,7 +101,6 @@ def configureIP(ip, netmask, broadcast, gateway, port):
     
 ### appliance_name in config.yml is assumed as the service name    
 def runService(telnet, service):
-    #print("servuce: ", service)
     if service == "Keycloak":
         time.sleep(15)
     else:
@@ -103,6 +113,7 @@ def runService(telnet, service):
                 time.sleep(2)
             
             telnet.write(str(commands["command"]).encode())
+            print(service, "has started...OK")
     
     telnet.close()
 
@@ -130,30 +141,34 @@ if __name__ == "__main__":
     print("OK")
     time.sleep(1)
 
-    ### Check appliance existance. put all appliance_name from nodes (in config files) in Array and compare with server.template_summary() (optional)
+    ### Check appliance existance
+    print("[3/6] Checking appliances...", end="")
+    checkAppliance(server)
+    print("OK")
+    #time.sleep(1)
 
     ### Create nodes
-    print("[3/6] Creating nodes...", end="")
+    print("[4/6] Creating nodes...", end="")
     nodeDict = createNodes(server, projectObj.project_id)
     print("OK")
-    time.sleep(1)
+    #time.sleep(1)
 
     ### Create links
-    print("[4/6] Creating links...", end="")
+    print("[5/6] Creating links...", end="")
     createLinks(server, projectObj.project_id, nodeDict)
     print("OK")
-    time.sleep(1)
+    #time.sleep(1)
 
     ### Set links filter
 
     ### Configure IP
-    print("[5/6] Configuring IP and Running Services...", end="")
+    print("[6/6] Configuring IP and Running Services...", end="")
     findNodeforIPConf(projectObj)
     print("OK")
-    time.sleep(1)
+    #time.sleep(1)
 
-    ### Run services
-    #print("[5/6] Run Services...", end="")
+    ### Run services (called in the findNodeforIPConf() function)
+    #print("[X/X] Run Services...", end="")
     #runService(telnet)
     #print("OK")
     #time.sleep(1)
