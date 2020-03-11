@@ -88,7 +88,9 @@ def configureIP(ip, netmask, broadcast, gateway, port):
 
     return telnet
     
+### appliance_name in config.yml is assumed as the service name    
 def runService(telnet, service):
+    #print("servuce: ", service)
     if service == "Keycloak":
         time.sleep(15)
     else:
@@ -96,8 +98,10 @@ def runService(telnet, service):
 
     for commands in COMMAND["commands"]:
         if commands["name"] == service:
-            telnet.write(str(commands["workdir"]).encode())
-            time.sleep(2)
+            if service == "Hls" or service == "Test":
+                telnet.write(str(commands["workdir"]).encode())
+                time.sleep(2)
+            
             telnet.write(str(commands["command"]).encode())
     
     telnet.close()
