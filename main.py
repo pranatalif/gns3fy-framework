@@ -4,6 +4,8 @@ from telnetlib import Telnet
 import yaml
 import time
 import sys
+import os
+import json
 
 global CONFIG
 global COMMAND
@@ -19,8 +21,13 @@ def listProject(server):
 
 def createProject(server, project):
     projectObj = Project(name=project, connector=server)
+    #print(projectObj.status)
+    # if projectObj.status == "opened":
+    #     print("Closing the current project...", end="")
+    #     projectObj.close()
+    #     print("OK")
+
     getProject = next((project for project in server.projects_summary(is_print=False) if project[0] == projectObj.name), "Project not found")
-    #print(getProject)
     if getProject[0] == projectObj.name:
         print("Project name existed, re-creating the project...", end="")
         deleteProject(getProject[1])
@@ -50,11 +57,17 @@ def createNodes(server, projectID):
     for nodes in CONFIG["nodes"]:
         node = Node(project_id=projectID, connector=server, template=nodes["appliance_name"], name=nodes["node_name"], x=nodes["x"], y=nodes["y"])
         node.create()
+        if nodes["node_type"] == "docker":
+            setContainerName(node)
         nodeDict.update({node.name : node.node_id})      
         node.start()
-        time.sleep(2)
+        time.sleep(1)
 
     return nodeDict
+
+def setContainerName(node):
+    cmd = "curl --unix-socket /var/run/docker.sock -X POST http:/v1.39/containers/"+node.properties["container_id"]+"/rename?name="+node.name+"\n"
+    os.system(cmd)
 
 def createLinks(server, projectID, nodeDict):  
     for links in CONFIG["links"]:
@@ -113,7 +126,7 @@ def runService(telnet, service):
                 time.sleep(2)
             
             telnet.write(str(commands["command"]).encode())
-            print(service, "has started...OK")
+            print("[STATUS]",  service, "has started...OK")
     
     telnet.close()
 
@@ -143,14 +156,14 @@ if __name__ == "__main__":
 
     ### Check appliance existance
     print("[3/6] Checking appliances...", end="")
-    checkAppliance(server)
+    #checkAppliance(server)
     print("OK")
     #time.sleep(1)
 
     ### Create nodes
     print("[4/6] Creating nodes...", end="")
     nodeDict = createNodes(server, projectObj.project_id)
-    print("OK")
+    print("OK. You can open the project now...") #Opening the project before nodes creation will dissarange the topologyhas
     #time.sleep(1)
 
     ### Create links
@@ -162,9 +175,9 @@ if __name__ == "__main__":
     ### Set links filter
 
     ### Configure IP
-    print("[6/6] Configuring IP and Running Services...", end="")
+    print("[6/6] Configuring IP and Running Services...")
     findNodeforIPConf(projectObj)
-    print("OK")
+    print("[STATUS] All services have started")
     #time.sleep(1)
 
     ### Run services (called in the findNodeforIPConf() function)

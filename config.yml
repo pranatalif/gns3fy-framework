@@ -4,125 +4,138 @@ gns3_port: "3080"
 project_name: "untitled"
 
 nodes:
-  - appliance_name: "EthernetSwitch"
+  - node_type: switch
+    appliance_name: "EthernetSwitch"
     node_name: EthSwitch1
     x: 0
     y: -200
-  - appliance_name: "EthernetSwitch"
+  - node_type: switch
+    appliance_name: "EthernetSwitch"
     node_name: EthSwitch2
     x: 210
     y: 180
-  - appliance_name: "EthernetSwitch"
+  - node_type: switch
+    appliance_name: "EthernetSwitch"
     node_name: EthSwitch3
     x: -210
     y: 180
-  - appliance_name: "NAT"
+  - node_type: nat
+    appliance_name: "NAT"
     node_name: Nat1
     x: -45
     y: 17
-  - appliance_name: "AlertManager" # Start monitoring before all
+  - node_type: docker
+    appliance_name: "AlertManager" # Start monitoring before all
     node_name: AlertManager1
     x: -355
     y: 40
     ip: "192.168.122.100"
     gw: "192.168.122.1"
-  - appliance_name: "NodeExporter" 
+  - node_type: docker
+    appliance_name: "NodeExporter" 
     node_name: NodeExporter1
     x: -210
     y: 10
     ip: "192.168.122.110"
     gw: "192.168.122.1"
-  - appliance_name: "Prometheus" 
+  # - node_type: docker
+  #   appliance_name: "NginxExporter" 
+  #   node_name: NginxExporter1
+  #   x: -150
+  #   y: 300
+  #   ip: "192.168.122.150"
+  #   gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Prometheus" 
     node_name: Prometheus1
     x: -280
     y: 310
     ip: "192.168.122.130"
     gw: "192.168.122.1"
-  - appliance_name: "Grafana" 
+  - node_type: docker
+    appliance_name: "Grafana" 
     node_name: Grafana1
     x: -410
     y: 190
     ip: "192.168.122.140"
     gw: "192.168.122.1"
-  - appliance_name: "Keycloak" # Keycloak must run first before HLS and Test
+  - node_type: docker
+    appliance_name: "Keycloak" # Keycloak must run first before HLS and Test
     node_name: Keycloak1
     x: -130
     y: -360
     ip: "192.168.122.20"
     gw: "192.168.122.1"
-  - appliance_name: "Hls"
+  - node_type: docker
+    appliance_name: "Hls"
     node_name: Hls1
     x: 150
     y: -370
     ip: "192.168.122.10"
     gw: "192.168.122.1"
   
-  # - appliance_name: "Webterm"
-  #   node_name: Webterm1
-  #   x: 360
-  #   y: 105
-  #   ip: "192.168.122.30"
-  #   gw: "192.168.122.1"
-  - appliance_name: "Test"
+  ### Test nodes
+  - node_type: docker
+    appliance_name: "Test"
     node_name: TestNode1
     x: 320
     y: -300
     ip: "192.168.122.41"
     gw: "192.168.122.1"
-  - appliance_name: "Test"
-    node_name: TestNode2
-    x: 320
-    y: -200
-    ip: "192.168.122.42"
-    gw: "192.168.122.1"
-  - appliance_name: "Test"
-    node_name: TestNode3
-    x: 320
-    y: -100
-    ip: "192.168.122.43"
-    gw: "192.168.122.1"
-  - appliance_name: "Test"
-    node_name: TestNode4
-    x: 320
-    y: 0
-    ip: "192.168.122.44"
-    gw: "192.168.122.1"
-  - appliance_name: "Test"
-    node_name: TestNode5
-    x: 320
-    y: 100
-    ip: "192.168.122.45"
-    gw: "192.168.122.1"
-  - appliance_name: "Test"
-    node_name: TestNode6
-    x: 420
-    y: -300
-    ip: "192.168.122.46"
-    gw: "192.168.122.1"
-  - appliance_name: "Test"
-    node_name: TestNode7
-    x: 420
-    y: -200
-    ip: "192.168.122.47"
-    gw: "192.168.122.1"
-  - appliance_name: "Test"
-    node_name: TestNode8
-    x: 420
-    y: -100
-    ip: "192.168.122.48"
-    gw: "192.168.122.1"
-  - appliance_name: "Test"
-    node_name: TestNode9
-    x: 420
-    y: 0
-    ip: "192.168.122.49"
-    gw: "192.168.122.1"
-  - appliance_name: "Test"
-    node_name: TestNode10
-    x: 420
-    y: 100
-    ip: "192.168.122.50"
-    gw: "192.168.122.1"
+  # - appliance_name: "Test"
+  #   node_name: TestNode2
+  #   x: 320
+  #   y: -200
+  #   ip: "192.168.122.42"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Test"
+  #   node_name: TestNode3
+  #   x: 320
+  #   y: -100
+  #   ip: "192.168.122.43"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Test"
+  #   node_name: TestNode4
+  #   x: 320
+  #   y: 0
+  #   ip: "192.168.122.44"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Test"
+  #   node_name: TestNode5
+  #   x: 320
+  #   y: 100
+  #   ip: "192.168.122.45"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Test"
+  #   node_name: TestNode6
+  #   x: 420
+  #   y: -300
+  #   ip: "192.168.122.46"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Test"
+  #   node_name: TestNode7
+  #   x: 420
+  #   y: -200
+  #   ip: "192.168.122.47"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Test"
+  #   node_name: TestNode8
+  #   x: 420
+  #   y: -100
+  #   ip: "192.168.122.48"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Test"
+  #   node_name: TestNode9
+  #   x: 420
+  #   y: 0
+  #   ip: "192.168.122.49"
+  #   gw: "192.168.122.1"
+  # - appliance_name: "Test"
+  #   node_name: TestNode10
+  #   x: 420
+  #   y: 100
+  #   ip: "192.168.122.50"
+  #   gw: "192.168.122.1"
 
 
 links:
@@ -156,50 +169,46 @@ links:
     port_num2: 0
 
   ### Testing cluster
-  # - node1: EthSwitch2
-  #   port_num1: 2
-  #   node2: Webterm1
-  #   port_num2: 0
   - node1: EthSwitch2
     port_num1: 3
     node2: TestNode1
     port_num2: 0
-  - node1: EthSwitch2
-    port_num1: 4
-    node2: TestNode2
-    port_num2: 0
-  - node1: EthSwitch2
-    port_num1: 5
-    node2: TestNode3
-    port_num2: 0
-  - node1: EthSwitch2
-    port_num1: 6
-    node2: TestNode4
-    port_num2: 0
-  - node1: EthSwitch2
-    port_num1: 7
-    node2: TestNode5
-    port_num2: 0
-  - node1: EthSwitch2
-    port_num1: 8
-    node2: TestNode6
-    port_num2: 0
-  - node1: EthSwitch2
-    port_num1: 9
-    node2: TestNode7
-    port_num2: 0
-  - node1: EthSwitch2
-    port_num1: 10
-    node2: TestNode8
-    port_num2: 0
-  - node1: EthSwitch2
-    port_num1: 11
-    node2: TestNode9
-    port_num2: 0
-  - node1: EthSwitch2
-    port_num1: 12
-    node2: TestNode10
-    port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 4
+  #   node2: TestNode2
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 5
+  #   node2: TestNode3
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 6
+  #   node2: TestNode4
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 7
+  #   node2: TestNode5
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 8
+  #   node2: TestNode6
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 9
+  #   node2: TestNode7
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 10
+  #   node2: TestNode8
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 11
+  #   node2: TestNode9
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 12
+  #   node2: TestNode10
+  #   port_num2: 0
 
   ### Monitoring cluster
   - node1: EthSwitch3
@@ -217,6 +226,10 @@ links:
   - node1: EthSwitch3
     port_num1: 4
     node2: Grafana1
+    port_num2: 0
+  - node1: EthSwitch3
+    port_num1: 5
+    node2: NodeExporter1
     port_num2: 0
 
 #  - EthSwitch1--Nat1

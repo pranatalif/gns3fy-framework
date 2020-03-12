@@ -31,4 +31,7 @@ commands:
   - name: Test
     workdir: "cd /usr/test\r\n"
     command: "java -jar /usr/test/seleniumTesting.jar\r\n"
+  - name: NginxExporter
+    workdir: "cd /usr/src/nginx-exporter"
+    command: "/usr/src/nginx-exporter/nginx-prometheus-exporter -nginx.scrape-uri http://192.168.122.160:8080/stub_status\r\n"
   
