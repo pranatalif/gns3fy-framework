@@ -25,38 +25,59 @@ nodes:
     x: -45
     y: 17
   - node_type: docker
+    appliance_name: "NginxProxy" 
+    node_name: NginxProxy1
+    x: -173
+    y: -250
+    ip: "192.168.122.5"
+    gw: "192.168.122.1"
+  - node_type: docker
     appliance_name: "AlertManager" # Start monitoring before all
     node_name: AlertManager1
     x: -355
     y: 40
     ip: "192.168.122.100"
     gw: "192.168.122.1"
-  - node_type: docker
-    appliance_name: "NodeExporter" 
-    node_name: NodeExporter1
-    x: -210
-    y: 10
-    ip: "192.168.122.110"
-    gw: "192.168.122.1"
+  # - node_type: docker
+  #   appliance_name: "NodeExporter" 
+  #   node_name: NodeExporter1
+  #   x: -210
+  #   y: 10
+  #   ip: "192.168.122.110"
+  #   gw: "192.168.122.1"
   # - node_type: docker
   #   appliance_name: "NginxExporter" 
   #   node_name: NginxExporter1
-  #   x: -150
+  #   x: -240
   #   y: 300
   #   ip: "192.168.122.150"
+  #   gw: "192.168.122.1"
+  # - node_type: docker
+  #   appliance_name: "VtsExporter" 
+  #   node_name: VtsExporter1
+  #   x: -380
+  #   y: 250
+  #   ip: "192.168.122.160"
+  #   gw: "192.168.122.1"
+  # - node_type: docker
+  #   appliance_name: "Nginxlog" 
+  #   node_name: Nginxlog1
+  #   x: -377
+  #   y: 317
+  #   ip: "192.168.122.170"
   #   gw: "192.168.122.1"
   - node_type: docker
     appliance_name: "Prometheus" 
     node_name: Prometheus1
-    x: -280
-    y: 310
+    x: -90
+    y: 300
     ip: "192.168.122.130"
     gw: "192.168.122.1"
   - node_type: docker
     appliance_name: "Grafana" 
     node_name: Grafana1
     x: -410
-    y: 190
+    y: 152
     ip: "192.168.122.140"
     gw: "192.168.122.1"
   - node_type: docker
@@ -69,19 +90,40 @@ nodes:
   - node_type: docker
     appliance_name: "Hls"
     node_name: Hls1
-    x: 150
-    y: -370
-    ip: "192.168.122.10"
+    x: -6
+    y: -396
+    ip: "192.168.122.11"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Hls"
+    node_name: Hls2
+    x: 111
+    y: -362
+    ip: "192.168.122.12"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Hls"
+    node_name: Hls3
+    x: 173
+    y: -249
+    ip: "192.168.122.13"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Hls"
+    node_name: Hls4
+    x: 152
+    y: -125
+    ip: "192.168.122.14"
     gw: "192.168.122.1"
   
   ### Test nodes
-  - node_type: docker
-    appliance_name: "Test"
-    node_name: TestNode1
-    x: 320
-    y: -300
-    ip: "192.168.122.41"
-    gw: "192.168.122.1"
+  # - node_type: docker
+  #   appliance_name: "Test"
+  #   node_name: TestNode1
+  #   x: 320
+  #   y: -300
+  #   ip: "192.168.122.41"
+  #   gw: "192.168.122.1"
   # - appliance_name: "Test"
   #   node_name: TestNode2
   #   x: 320
@@ -152,11 +194,7 @@ links:
     port_num1: 1
     node2: EthSwitch3
     port_num2: 0
-  #!!!Uncommenting this link will max CPU usage by GNS3server!!!
-  # - node1: EthSwitch1 
-  #   port_num1: 2
-  #   node2: EthSwitch3
-  #   port_num2: 1
+
 
   ### SUT cluster
   - node1: EthSwitch1
@@ -167,12 +205,28 @@ links:
     port_num1: 4
     node2: Hls1
     port_num2: 0
+  - node1: EthSwitch1
+    port_num1: 5
+    node2: Hls2
+    port_num2: 0
+  - node1: EthSwitch1
+    port_num1: 6
+    node2: Hls3
+    port_num2: 0
+  - node1: EthSwitch1
+    port_num1: 7
+    node2: Hls4
+    port_num2: 0
+  - node1: EthSwitch1
+    port_num1: 8
+    node2: NginxProxy1
+    port_num2: 0
 
   ### Testing cluster
-  - node1: EthSwitch2
-    port_num1: 3
-    node2: TestNode1
-    port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 3
+  #   node2: TestNode1
+  #   port_num2: 0
   # - node1: EthSwitch2
   #   port_num1: 4
   #   node2: TestNode2
@@ -215,21 +269,29 @@ links:
     port_num1: 1
     node2: AlertManager1
     port_num2: 0
+  # - node1: EthSwitch3
+  #   port_num1: 2
+  #   node2: NginxExporter1
+  #   port_num2: 0
+  # - node1: EthSwitch3
+  #   port_num1: 3
+  #   node2: VtsExporter1
+  #   port_num2: 0
+  # - node1: EthSwitch3
+  #   port_num1: 4
+  #   node2: NodeExporter1
+  #   port_num2: 0
+  # - node1: EthSwitch3
+  #   port_num1: 5
+  #   node2: Nginxlog1
+  #   port_num2: 0
   - node1: EthSwitch3
-    port_num1: 2
-    node2: NodeExporter1
-    port_num2: 0
-  - node1: EthSwitch3
-    port_num1: 3
+    port_num1: 6
     node2: Prometheus1
     port_num2: 0
   - node1: EthSwitch3
-    port_num1: 4
+    port_num1: 7
     node2: Grafana1
-    port_num2: 0
-  - node1: EthSwitch3
-    port_num1: 5
-    node2: NodeExporter1
     port_num2: 0
 
 #  - EthSwitch1--Nat1

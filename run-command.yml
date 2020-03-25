@@ -10,6 +10,23 @@
 
   ### make sure all docker has the WORKDIR command where the file need to be executed
 commands:
+  - name: Nginx
+    workdir: "cd /usr/sbin\r\n"
+    command1: "/etc/nginx/nginxlog/prometheus-nginxlog-exporter -config-file /etc/config.yml &\r\n"
+    command2: "/usr/sbin/nginx -g 'daemon off;'\r\n"
+  - name: NginxProxy
+    workdir: "cd /usr/sbin\r\n"
+    command: "/usr/sbin/nginx -g 'daemon off;'\r\n"
+  - name: Nginxlog
+    workdir: "cd /usr/src/nginxlog\r\n"
+    command: "/etc/nginx/nginxlog/prometheus-nginxlog-exporter -config-file /etc/config.yml\r\n"
+    #command: "/usr/src/nginxlog/prometheus-nginxlog-exporter -config-file /etc/config.yml\r\n"
+  - name: NginxExporter
+    workdir: "cd /usr/src/nginx-exporter\r\n"
+    command: "/usr/src/nginx-exporter/nginx-prometheus-exporter -nginx.scrape-uri http://192.168.122.5:80/metrics\r\n"
+  - name: VtsExporter
+    workdir: "cd /bin\r\n"
+    command: "/bin/docker-entrypoint.sh\r\n"
   - name: NodeExporter
     workdir: "cd /usr/src/node-exporter\r\n"
     command: "/usr/src/node-exporter/node_exporter\r\n"
@@ -31,7 +48,4 @@ commands:
   - name: Test
     workdir: "cd /usr/test\r\n"
     command: "java -jar /usr/test/seleniumTesting.jar\r\n"
-  - name: NginxExporter
-    workdir: "cd /usr/src/nginx-exporter"
-    command: "/usr/src/nginx-exporter/nginx-prometheus-exporter -nginx.scrape-uri http://192.168.122.160:8080/stub_status\r\n"
   

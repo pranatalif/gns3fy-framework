@@ -7,6 +7,7 @@ import sys
 import os
 import json
 
+
 global CONFIG
 global COMMAND
 global server
@@ -58,16 +59,23 @@ def createNodes(server, projectID):
         node = Node(project_id=projectID, connector=server, template=nodes["appliance_name"], name=nodes["node_name"], x=nodes["x"], y=nodes["y"])
         node.create()
         if nodes["node_type"] == "docker":
-            setContainerName(node)
+            setContainerName(node, server)
         nodeDict.update({node.name : node.node_id})      
         node.start()
         time.sleep(1)
 
     return nodeDict
 
-def setContainerName(node):
-    cmd = "curl --unix-socket /var/run/docker.sock -X POST http:/v1.39/containers/"+node.properties["container_id"]+"/rename?name="+node.name+"\n"
-    os.system(cmd)
+def setContainerName(node, projectID):
+    cmdSetContainerName = "curl --unix-socket /var/run/docker.sock -X POST http:/v1.39/containers/"+node.properties["container_id"]+"/rename?name="+node.name+"\n"
+    #cmd = "curl --unix-socket /var/run/docker.sock 'http:/v1.39/containers/"+node.properties["container_id"]+"/json'\n"
+    #env = '{"environment": "VIRTUAL_HOST=hls.diverse.fr"}'
+    #cmdUpdateVariable = "curl -i -X PUT 'http://localhost:3080/v2/compute/projects/a1e920ca-338a-4e9f-b363-aa607b09dd80/docker/nodes/1a59fa68-aef8-4220-9262-01d2063817a0' -d '"+ env +"'"
+    os.system(cmdSetContainerName)
+    # os.system(cmd)
+
+#def container(node):
+    #cmd = 
 
 def createLinks(server, projectID, nodeDict):  
     for links in CONFIG["links"]:
@@ -94,16 +102,21 @@ def findNodeforIPConf(project):
             #print(nodeInConfig["node_name"])
             for nodeInSummary in summary:
                 if nodeInConfig["node_name"] in nodeInSummary[0]:
-                    telnet = configureIP(ip, netmask, broadcast, gw, nodeInSummary[2])
+                    telnet = configureIP(ip, netmask, broadcast, gw, nodeInSummary[2], nodeInConfig["appliance_name"])
                     runService(telnet, nodeInConfig["appliance_name"])
                 #else:
                  #   print(template[4])
 
 
-def configureIP(ip, netmask, broadcast, gateway, port):
+def configureIP(ip, netmask, broadcast, gateway, port, service):
+    nginxProxyIP = "10.0.2.15"
     try:
         telnet = Telnet(CONFIG["gns3_server"], port)
-        cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
+        if service == "Keycloak" or service == "Hls" or service == "Test":
+            cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf\nup echo '+ nginxProxyIP +' hls.gns3.fr >> /etc/hosts"'
+        else:
+            cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
+        #cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
         telnet.write(("echo -e "+cmdIP+" > /etc/network/interfaces\r\n").encode())
         time.sleep(2) # should have wait before 2 commands, otherwise the file not changed.
         telnet.write(b"/etc/init.d/networking restart\r\n")                   
@@ -124,8 +137,13 @@ def runService(telnet, service):
             if service == "Hls" or service == "Test":
                 telnet.write(str(commands["workdir"]).encode())
                 time.sleep(2)
+            # if service == "Nginx":
+            #     telnet.write(str(commands["command1"]).encode())
+            #     time.sleep(2)
+            #     telnet.write(str(commands["command2"]).encode())
+            else:
+                telnet.write(str(commands["command"]).encode())
             
-            telnet.write(str(commands["command"]).encode())
             print("[STATUS]",  service, "has started...OK")
     
     telnet.close()
