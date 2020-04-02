@@ -5,6 +5,7 @@ import yaml
 import time
 import sys
 import os
+# import system
 import json
 
 
@@ -102,21 +103,25 @@ def findNodeforIPConf(project):
             #print(nodeInConfig["node_name"])
             for nodeInSummary in summary:
                 if nodeInConfig["node_name"] in nodeInSummary[0]:
+                    if nodeInConfig["appliance_name"] == "Test":
+                        if nodeInConfig["node_name"] == "TestNode1":
+                            input("Press <ENTER> to start perturbation...")
+
                     telnet = configureIP(ip, netmask, broadcast, gw, nodeInSummary[2], nodeInConfig["appliance_name"])
-                    runService(telnet, nodeInConfig["appliance_name"])
+                    runService(telnet, nodeInConfig["appliance_name"])    
+                        
                 #else:
                  #   print(template[4])
 
 
 def configureIP(ip, netmask, broadcast, gateway, port, service):
-    nginxProxyIP = "10.0.2.15"
+    #nginxProxyIP = "192.168.122.5"
     try:
         telnet = Telnet(CONFIG["gns3_server"], port)
-        if service == "Keycloak" or service == "Hls" or service == "Test":
-            cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf\nup echo '+ nginxProxyIP +' hls.gns3.fr >> /etc/hosts"'
-        else:
-            cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
-        #cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
+        # if service == "Keycloak" or service == "Hls" or service == "Test":
+        #     cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf\nup echo '+ nginxProxyIP +' hls.gns3.fr >> /etc/hosts"'
+        # else:
+        cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
         telnet.write(("echo -e "+cmdIP+" > /etc/network/interfaces\r\n").encode())
         time.sleep(2) # should have wait before 2 commands, otherwise the file not changed.
         telnet.write(b"/etc/init.d/networking restart\r\n")                   
@@ -141,12 +146,14 @@ def runService(telnet, service):
             #     telnet.write(str(commands["command1"]).encode())
             #     time.sleep(2)
             #     telnet.write(str(commands["command2"]).encode())
-            else:
-                telnet.write(str(commands["command"]).encode())
             
+            telnet.write(str(commands["command"]).encode())
             print("[STATUS]",  service, "has started...OK")
     
     telnet.close()
+
+def pause():
+    programPause = input("Press <ENTER> to continue...")
 
 if __name__ == "__main__":
     ### Read configuration file
@@ -162,7 +169,7 @@ if __name__ == "__main__":
     getVersion(server)
     print("OK")
     time.sleep(1)
-    
+    #input("Press <ENTER> to continue...")
     ### List all created projects
     #listProject(server)
 

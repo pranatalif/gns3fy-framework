@@ -10,11 +10,11 @@
 
   ### make sure all docker has the WORKDIR command where the file need to be executed
 commands:
+  # - name: Nginx
+  #   workdir: "cd /usr/sbin\r\n"
+  #   command1: "/etc/nginx/nginxlog/prometheus-nginxlog-exporter -config-file /etc/config.yml &\r\n"
+  #   command2: "/usr/sbin/nginx -g 'daemon off;'\r\n"
   - name: Nginx
-    workdir: "cd /usr/sbin\r\n"
-    command1: "/etc/nginx/nginxlog/prometheus-nginxlog-exporter -config-file /etc/config.yml &\r\n"
-    command2: "/usr/sbin/nginx -g 'daemon off;'\r\n"
-  - name: NginxProxy
     workdir: "cd /usr/sbin\r\n"
     command: "/usr/sbin/nginx -g 'daemon off;'\r\n"
   - name: Nginxlog

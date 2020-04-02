@@ -25,8 +25,8 @@ nodes:
     x: -45
     y: 17
   - node_type: docker
-    appliance_name: "NginxProxy" 
-    node_name: NginxProxy1
+    appliance_name: "Nginx" 
+    node_name: Nginx1
     x: -173
     y: -250
     ip: "192.168.122.5"
@@ -117,37 +117,41 @@ nodes:
     gw: "192.168.122.1"
   
   ### Test nodes
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode1
-  #   x: 320
-  #   y: -300
-  #   ip: "192.168.122.41"
-  #   gw: "192.168.122.1"
-  # - appliance_name: "Test"
-  #   node_name: TestNode2
-  #   x: 320
-  #   y: -200
-  #   ip: "192.168.122.42"
-  #   gw: "192.168.122.1"
-  # - appliance_name: "Test"
-  #   node_name: TestNode3
-  #   x: 320
-  #   y: -100
-  #   ip: "192.168.122.43"
-  #   gw: "192.168.122.1"
-  # - appliance_name: "Test"
-  #   node_name: TestNode4
-  #   x: 320
-  #   y: 0
-  #   ip: "192.168.122.44"
-  #   gw: "192.168.122.1"
-  # - appliance_name: "Test"
-  #   node_name: TestNode5
-  #   x: 320
-  #   y: 100
-  #   ip: "192.168.122.45"
-  #   gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: TestNode1
+    x: 320
+    y: -300
+    ip: "192.168.122.41"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: TestNode2
+    x: 320
+    y: -200
+    ip: "192.168.122.42"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: TestNode3
+    x: 320
+    y: -100
+    ip: "192.168.122.43"
+    gw: "192.168.122.1"
+  - node_type: docker 
+    appliance_name: "Test"
+    node_name: TestNode4
+    x: 320
+    y: 0
+    ip: "192.168.122.44"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: TestNode5
+    x: 320
+    y: 100
+    ip: "192.168.122.45"
+    gw: "192.168.122.1"
   # - appliance_name: "Test"
   #   node_name: TestNode6
   #   x: 420
@@ -219,30 +223,30 @@ links:
     port_num2: 0
   - node1: EthSwitch1
     port_num1: 8
-    node2: NginxProxy1
+    node2: Nginx1
     port_num2: 0
 
   ### Testing cluster
-  # - node1: EthSwitch2
-  #   port_num1: 3
-  #   node2: TestNode1
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 4
-  #   node2: TestNode2
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 5
-  #   node2: TestNode3
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 6
-  #   node2: TestNode4
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 7
-  #   node2: TestNode5
-  #   port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 3
+    node2: TestNode1
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 4
+    node2: TestNode2
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 5
+    node2: TestNode3
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 6
+    node2: TestNode4
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 7
+    node2: TestNode5
+    port_num2: 0
   # - node1: EthSwitch2
   #   port_num1: 8
   #   node2: TestNode6
