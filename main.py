@@ -78,18 +78,40 @@ def setContainerName(node, projectID):
 #def container(node):
     #cmd = 
 
-def createLinks(server, projectID, nodeDict):  
+def createLinks(server, projectID, nodeDict):
+    filterDict = {}  
     for links in CONFIG["links"]:
         if all (key in nodeDict for key in (links["node1"], links["node2"])):
             node1ID=nodeDict[links["node1"]]
             node2ID=nodeDict[links["node2"]]
         else:
-            print("Neither node1 or node2 object found. Check the spelling of the nodes name")
+            print("Neither node1 nor node2 object found. Check the spelling of the nodes name!")
             break
 
         nodeCombination = [dict(node_id=node1ID, adapter_number=0, port_number=links["port_num1"]), dict(node_id=node2ID, adapter_number=0, port_number=links["port_num2"])]
         link = Link(project_id=projectID, connector=server, nodes=nodeCombination)
         link.create()
+        # print("id " + link.link_id)
+        #link.get()
+        # if "filter" in links:
+        #     #filter = links["filter"]
+        #     print("id " +link.link_id)
+        #     #print(links["filter"][2])
+        #     # link.filters["freqDrop"] = links["filter"][0]
+        #     # link.filters["packetLos"] = links["filter"][1]
+        #     # link.filters["latency"] = links["filter"][2]
+        #     # link.filters["corrupt"] = links["filter"][3]
+        #     filterDict = links["filter"]
+        #     print(link.filters)
+            
+        #     #print(links["filter"], links["node1"], links["node2"])
+        # link.filters(links["filter"])
+        # #Link(link.link_id, link.filters)
+        # # link.create()
+        
+        
+        # # print(link.link_type)
+        # # print(link.filters)
 
 def findNodeforIPConf(project):
     netmask = "255.255.255.0"
@@ -103,18 +125,18 @@ def findNodeforIPConf(project):
             #print(nodeInConfig["node_name"])
             for nodeInSummary in summary:
                 if nodeInConfig["node_name"] in nodeInSummary[0]:
-                    if nodeInConfig["appliance_name"] == "Test":
-                        if nodeInConfig["node_name"] == "TestNode1":
-                            input("Press <ENTER> to start perturbation...")
+                    # if nodeInConfig["appliance_name"] == "Test":
+                        # if nodeInConfig["node_name"] == "TestNode1":
+                        #     input("Press <ENTER> to start perturbation...")
 
-                    telnet = configureIP(ip, netmask, broadcast, gw, nodeInSummary[2], nodeInConfig["appliance_name"])
-                    runService(telnet, nodeInConfig["appliance_name"])    
+                    telnet = configureIP(ip, netmask, broadcast, gw, nodeInSummary[2])
+                    runService(telnet, nodeInConfig["node_name"])    
                         
                 #else:
                  #   print(template[4])
 
 
-def configureIP(ip, netmask, broadcast, gateway, port, service):
+def configureIP(ip, netmask, broadcast, gateway, port):
     #nginxProxyIP = "192.168.122.5"
     try:
         telnet = Telnet(CONFIG["gns3_server"], port)
@@ -132,16 +154,16 @@ def configureIP(ip, netmask, broadcast, gateway, port, service):
     
 ### appliance_name in config.yml is assumed as the service name    
 def runService(telnet, service):
-    if service == "Keycloak":
-        time.sleep(15)
-    else:
-        time.sleep(5)
+    # if "Keycloak" in service:
+    #     time.sleep(15)
+    # else:
+    #     time.sleep(5)
 
     for commands in COMMAND["commands"]:
-        if commands["name"] == service:
-            if service == "Hls" or service == "Test":
-                telnet.write(str(commands["workdir"]).encode())
-                time.sleep(2)
+        if commands["name"] in service:
+            #if "Hls" in service or "Test" in service:
+            telnet.write(str(commands["workdir"]).encode())
+            time.sleep(2)
             # if service == "Nginx":
             #     telnet.write(str(commands["command1"]).encode())
             #     time.sleep(2)
@@ -151,9 +173,6 @@ def runService(telnet, service):
             print("[STATUS]",  service, "has started...OK")
     
     telnet.close()
-
-def pause():
-    programPause = input("Press <ENTER> to continue...")
 
 if __name__ == "__main__":
     ### Read configuration file
@@ -188,7 +207,7 @@ if __name__ == "__main__":
     ### Create nodes
     print("[4/6] Creating nodes...", end="")
     nodeDict = createNodes(server, projectObj.project_id)
-    print("OK. You can open the project now...") #Opening the project before nodes creation will dissarange the topologyhas
+    print("OK. You can open the project now...") # Opening the project before nodes creation will dissarange the topology
     #time.sleep(1)
 
     ### Create links
@@ -197,16 +216,16 @@ if __name__ == "__main__":
     print("OK")
     #time.sleep(1)
 
-    ### Set links filter
+    ### Set links filter (on progress)
 
     ### Configure IP
     print("[6/6] Configuring IP and Running Services...")
     findNodeforIPConf(projectObj)
     print("[STATUS] All services have started")
-    #time.sleep(1)
+    time.sleep(1)
 
     ### Run services (called in the findNodeforIPConf() function)
-    #print("[X/X] Run Services...", end="")
-    #runService(telnet)
-    #print("OK")
-    #time.sleep(1)
+    # print("[X/X] Run Services...", end="")
+    # runService(telnet)
+    # print("OK")
+    # time.sleep(1)
