@@ -294,7 +294,7 @@ nodes:
   #   node_name: TestNode25
   #   x: 720
   #   y: 100
-  #   ip: "192.168.122.65”
+  #   ip: "192.168.122.65"
   #   gw: "192.168.122.1"
 
   # - node_type: docker
