@@ -1,4 +1,4 @@
-gns3_server: "localhost"
+gns3_server: "diversitas.irisa.fr"
 gns3_port: "3080"
 
 project_name: "untitled"
@@ -24,6 +24,13 @@ nodes:
     node_name: Nat1
     x: -45
     y: 17
+  - node_type: docker
+    appliance_name: "Keycloak" # Keycloak must run first before HLS and Test
+    node_name: Keycloak1
+    x: -130
+    y: -360
+    ip: "192.168.122.20"
+    gw: "192.168.122.1"
   - node_type: docker
     appliance_name: "Nginx" 
     node_name: Nginx1
@@ -67,6 +74,13 @@ nodes:
   #   ip: "192.168.122.170"
   #   gw: "192.168.122.1"
   - node_type: docker
+    appliance_name: "Pushgateway" 
+    node_name: Pushgateway1
+    x: -377
+    y: 317
+    ip: "192.168.122.180"
+    gw: "192.168.122.1"
+  - node_type: docker
     appliance_name: "Prometheus" 
     node_name: Prometheus1
     x: -90
@@ -79,13 +93,6 @@ nodes:
     x: -410
     y: 152
     ip: "192.168.122.140"
-    gw: "192.168.122.1"
-  - node_type: docker
-    appliance_name: "Keycloak" # Keycloak must run first before HLS and Test
-    node_name: Keycloak1
-    x: -130
-    y: -360
-    ip: "192.168.122.20"
     gw: "192.168.122.1"
   - node_type: docker
     appliance_name: "Hls"
@@ -119,218 +126,290 @@ nodes:
   ### Test nodes
   - node_type: docker
     appliance_name: "Test"
-    node_name: TestNode1
+    node_name: "Test1"
     x: 320
     y: -300
     ip: "192.168.122.41"
     gw: "192.168.122.1"
   - node_type: docker
     appliance_name: "Test"
-    node_name: TestNode2
+    node_name: Test2
     x: 320
     y: -200
     ip: "192.168.122.42"
     gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode3
-  #   x: 320
-  #   y: -100
-  #   ip: "192.168.122.43"
-  #   gw: "192.168.122.1"
-  # - node_type: docker 
-  #   appliance_name: "Test"
-  #   node_name: TestNode4
-  #   x: 320
-  #   y: 0
-  #   ip: "192.168.122.44"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode5
-  #   x: 320
-  #   y: 100
-  #   ip: "192.168.122.45"
-  #   gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test3
+    x: 320
+    y: -100
+    ip: "192.168.122.43"
+    gw: "192.168.122.1"
+  - node_type: docker 
+    appliance_name: "Test"
+    node_name: Test4
+    x: 320
+    y: 0
+    ip: "192.168.122.44"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test5
+    x: 320
+    y: 100
+    ip: "192.168.122.45"
+    gw: "192.168.122.1"
     
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode6
-  #   x: 420
-  #   y: -300
-  #   ip: "192.168.122.46"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode7
-  #   x: 420
-  #   y: -200
-  #   ip: "192.168.122.47"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode8
-  #   x: 420
-  #   y: -100
-  #   ip: "192.168.122.48"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode9
-  #   x: 420
-  #   y: 0
-  #   ip: "192.168.122.49"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode10
-  #   x: 420
-  #   y: 100
-  #   ip: "192.168.122.50"
-  #   gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test6
+    x: 420
+    y: -300
+    ip: "192.168.122.46"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test7
+    x: 420
+    y: -200
+    ip: "192.168.122.47"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test8
+    x: 420
+    y: -100
+    ip: "192.168.122.48"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test9
+    x: 420
+    y: 0
+    ip: "192.168.122.49"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test10
+    x: 420
+    y: 100
+    ip: "192.168.122.50"
+    gw: "192.168.122.1"
     
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test11
+    x: 520
+    y: -300
+    ip: "192.168.122.51"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test12
+    x: 520
+    y: -200
+    ip: "192.168.122.52"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test13
+    x: 520
+    y: -100
+    ip: "192.168.122.53"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test14
+    x: 520
+    y: 0
+    ip: "192.168.122.54"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test15
+    x: 520
+    y: 100
+    ip: "192.168.122.55"
+    gw: "192.168.122.1"
+
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test16
+    x: 620
+    y: -300
+    ip: "192.168.122.56"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test17
+    x: 620
+    y: -200
+    ip: "192.168.122.57"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test18
+    x: 620
+    y: -100
+    ip: "192.168.122.58"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test19
+    x: 620
+    y: 0
+    ip: "192.168.122.59"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test20
+    x: 620
+    y: 100
+    ip: "192.168.122.60"
+    gw: "192.168.122.1"
+
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test21
+    x: 720
+    y: -300
+    ip: "192.168.122.61"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test22
+    x: 720
+    y: -200
+    ip: "192.168.122.62"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test23
+    x: 720
+    y: -100
+    ip: "192.168.122.63"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test24
+    x: 720
+    y: 0
+    ip: "192.168.122.64"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test25
+    x: 720
+    y: 100
+    ip: "192.168.122.65"
+    gw: "192.168.122.1"
+
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test26
+    x: 820
+    y: -300
+    ip: "192.168.122.66"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test27
+    x: 820
+    y: -200
+    ip: "192.168.122.67"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test28
+    x: 820
+    y: -100
+    ip: "192.168.122.68"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test29
+    x: 820
+    y: 0
+    ip: "192.168.122.69"
+    gw: "192.168.122.1"
+  - node_type: docker
+    appliance_name: "Test"
+    node_name: Test30
+    x: 820
+    y: 100
+    ip: "192.168.122.70"
+    gw: "192.168.122.1"
+
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode11
-  #   x: 520
+  #   node_name: Test31
+  #   x: 920
   #   y: -300
-  #   ip: "192.168.122.51"
+  #   ip: "192.168.122.71"
   #   gw: "192.168.122.1"
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode12
-  #   x: 520
+  #   node_name: Test32
+  #   x: 920
   #   y: -200
-  #   ip: "192.168.122.52"
+  #   ip: "192.168.122.72"
   #   gw: "192.168.122.1"
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode13
-  #   x: 520
+  #   node_name: Test33
+  #   x: 920
   #   y: -100
-  #   ip: "192.168.122.53"
+  #   ip: "192.168.122.73"
   #   gw: "192.168.122.1"
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode14
-  #   x: 520
+  #   node_name: Test34
+  #   x: 920
   #   y: 0
-  #   ip: "192.168.122.54"
+  #   ip: "192.168.122.74"
   #   gw: "192.168.122.1"
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode15
-  #   x: 520
+  #   node_name: Test35
+  #   x: 920
   #   y: 100
-  #   ip: "192.168.122.55"
+  #   ip: "192.168.122.75"
   #   gw: "192.168.122.1"
 
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode16
-  #   x: 620
+  #   node_name: Test36
+  #   x: 1020
   #   y: -300
-  #   ip: "192.168.122.56"
+  #   ip: "192.168.122.76"
   #   gw: "192.168.122.1"
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode17
-  #   x: 620
+  #   node_name: Test37
+  #   x: 1020
   #   y: -200
-  #   ip: "192.168.122.57"
+  #   ip: "192.168.122.77"
   #   gw: "192.168.122.1"
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode18
-  #   x: 620
+  #   node_name: Test38
+  #   x: 1020
   #   y: -100
-  #   ip: "192.168.122.58"
+  #   ip: "192.168.122.78"
   #   gw: "192.168.122.1"
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode19
-  #   x: 620
+  #   node_name: Test39
+  #   x: 1020
   #   y: 0
-  #   ip: "192.168.122.59"
+  #   ip: "192.168.122.79"
   #   gw: "192.168.122.1"
   # - node_type: docker
   #   appliance_name: "Test"
-  #   node_name: TestNode20
-  #   x: 620
+  #   node_name: Test40
+  #   x: 1020
   #   y: 100
-  #   ip: "192.168.122.60"
-  #   gw: "192.168.122.1"
-
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode21
-  #   x: 720
-  #   y: -300
-  #   ip: "192.168.122.61"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode22
-  #   x: 720
-  #   y: -200
-  #   ip: "192.168.122.62"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode23
-  #   x: 720
-  #   y: -100
-  #   ip: "192.168.122.63"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode24
-  #   x: 720
-  #   y: 0
-  #   ip: "192.168.122.64"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode25
-  #   x: 720
-  #   y: 100
-  #   ip: "192.168.122.65"
-  #   gw: "192.168.122.1"
-
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode26
-  #   x: 820
-  #   y: -300
-  #   ip: "192.168.122.66"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode27
-  #   x: 820
-  #   y: -200
-  #   ip: "192.168.122.67"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode28
-  #   x: 820
-  #   y: -100
-  #   ip: "192.168.122.68"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode29
-  #   x: 820
-  #   y: 0
-  #   ip: "192.168.122.69"
-  #   gw: "192.168.122.1"
-  # - node_type: docker
-  #   appliance_name: "Test"
-  #   node_name: TestNode30
-  #   x: 820
-  #   y: 100
-  #   ip: "192.168.122.70"
+  #   ip: "192.168.122.80"
   #   gw: "192.168.122.1"
 
 links:
@@ -347,7 +426,44 @@ links:
     port_num1: 1
     node2: EthSwitch3
     port_num2: 0
+  # - node1: EthSwitch1
+  #   port_num1: 99
+  #   node2: EthSwitch3
+  #   port_num2: 99
 
+  ### Monitoring cluster
+  - node1: EthSwitch3
+    port_num1: 1
+    node2: AlertManager1
+    port_num2: 0
+  - node1: EthSwitch3
+    port_num1: 6
+    node2: Pushgateway1
+    port_num2: 0
+  - node1: EthSwitch3
+    port_num1: 7
+    node2: Prometheus1
+    port_num2: 0
+  - node1: EthSwitch3
+    port_num1: 8
+    node2: Grafana1
+    port_num2: 0
+  # - node1: EthSwitch3
+  #   port_num1: 2
+  #   node2: NginxExporter1
+  #   port_num2: 0
+  # - node1: EthSwitch3
+  #   port_num1: 3
+  #   node2: VtsExporter1
+  #   port_num2: 0
+  # - node1: EthSwitch3
+  #   port_num1: 4
+  #   node2: NodeExporter1
+  #   port_num2: 0
+  # - node1: EthSwitch3
+  #   port_num1: 5
+  #   node2: Nginxlog1
+  #   port_num2: 0
 
   ### SUT cluster
   - node1: EthSwitch1
@@ -380,159 +496,168 @@ links:
   ### Testing cluster
   - node1: EthSwitch2
     port_num1: 3
-    node2: TestNode1
+    node2: Test1
     port_num2: 0
   - node1: EthSwitch2
     port_num1: 4
-    node2: TestNode2
+    node2: Test2
     port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 5
-  #   node2: TestNode3
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 6
-  #   node2: TestNode4
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 7
-  #   node2: TestNode5
-  #   port_num2: 0
-
-  # - node1: EthSwitch2
-  #   port_num1: 8
-  #   node2: TestNode6
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 9
-  #   node2: TestNode7
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 10
-  #   node2: TestNode8
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 11
-  #   node2: TestNode9
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 12
-  #   node2: TestNode10
-  #   port_num2: 0
-
-  # - node1: EthSwitch2
-  #   port_num1: 13
-  #   node2: TestNode11
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 14
-  #   node2: TestNode12
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 15
-  #   node2: TestNode13
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 16
-  #   node2: TestNode14
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 17
-  #   node2: TestNode15
-  #   port_num2: 0
-
-  # - node1: EthSwitch2
-  #   port_num1: 18
-  #   node2: TestNode16
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 19
-  #   node2: TestNode17
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 20
-  #   node2: TestNode18
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 21
-  #   node2: TestNode19
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 22
-  #   node2: TestNode20
-  #   port_num2: 0
-
-  # - node1: EthSwitch2
-  #   port_num1: 23
-  #   node2: TestNode21
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 24
-  #   node2: TestNode22
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 25
-  #   node2: TestNode23
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 26
-  #   node2: TestNode24
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 27
-  #   node2: TestNode25
-  #   port_num2: 0
-
-  # - node1: EthSwitch2
-  #   port_num1: 28
-  #   node2: TestNode26
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 29
-  #   node2: TestNode27
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 30
-  #   node2: TestNode28
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 31
-  #   node2: TestNode29
-  #   port_num2: 0
-  # - node1: EthSwitch2
-  #   port_num1: 32
-  #   node2: TestNode30
-  #   port_num2: 0
-
-  ### Monitoring cluster
-  - node1: EthSwitch3
-    port_num1: 1
-    node2: AlertManager1
+  - node1: EthSwitch2
+    port_num1: 5
+    node2: Test3
     port_num2: 0
-  # - node1: EthSwitch3
-  #   port_num1: 2
-  #   node2: NginxExporter1
-  #   port_num2: 0
-  # - node1: EthSwitch3
-  #   port_num1: 3
-  #   node2: VtsExporter1
-  #   port_num2: 0
-  # - node1: EthSwitch3
-  #   port_num1: 4
-  #   node2: NodeExporter1
-  #   port_num2: 0
-  # - node1: EthSwitch3
-  #   port_num1: 5
-  #   node2: Nginxlog1
-  #   port_num2: 0
-  - node1: EthSwitch3
+  - node1: EthSwitch2
     port_num1: 6
-    node2: Prometheus1
+    node2: Test4
     port_num2: 0
-  - node1: EthSwitch3
+  - node1: EthSwitch2
     port_num1: 7
-    node2: Grafana1
+    node2: Test5
     port_num2: 0
 
-#  - EthSwitch1--Nat1
-#  - EthSwtich1--TestNode1
+  - node1: EthSwitch2
+    port_num1: 8
+    node2: Test6
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 9
+    node2: Test7
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 10
+    node2: Test8
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 11
+    node2: Test9
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 12
+    node2: Test10
+    port_num2: 0
+
+  - node1: EthSwitch2
+    port_num1: 13
+    node2: Test11
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 14
+    node2: Test12
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 15
+    node2: Test13
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 16
+    node2: Test14
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 17
+    node2: Test15
+    port_num2: 0
+
+  - node1: EthSwitch2
+    port_num1: 18
+    node2: Test16
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 19
+    node2: Test17
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 20
+    node2: Test18
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 21
+    node2: Test19
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 22
+    node2: Test20
+    port_num2: 0
+
+  - node1: EthSwitch2
+    port_num1: 23
+    node2: Test21
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 24
+    node2: Test22
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 25
+    node2: Test23
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 26
+    node2: Test24
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 27
+    node2: Test25
+    port_num2: 0
+
+  - node1: EthSwitch2
+    port_num1: 28
+    node2: Test26
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 29
+    node2: Test27
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 30
+    node2: Test28
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 31
+    node2: Test29
+    port_num2: 0
+  - node1: EthSwitch2
+    port_num1: 32
+    node2: Test30
+    port_num2: 0
+
+  # - node1: EthSwitch2
+  #   port_num1: 33
+  #   node2: Test31
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 34
+  #   node2: Test32
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 35
+  #   node2: Test33
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 36
+  #   node2: Test34
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 37
+  #   node2: Test35
+  #   port_num2: 0
+
+  # - node1: EthSwitch2
+  #   port_num1: 38
+  #   node2: Test36
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 39
+  #   node2: Test37
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 40
+  #   node2: Test38
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 41
+  #   node2: Test39
+  #   port_num2: 0
+  # - node1: EthSwitch2
+  #   port_num1: 42
+  #   node2: Test40
+  #   port_num2: 0

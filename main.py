@@ -79,7 +79,7 @@ def setContainerName(node, projectID):
     #cmd = 
 
 def createLinks(server, projectID, nodeDict):
-    filterDict = {}  
+    # filterDict = {}  
     for links in CONFIG["links"]:
         if all (key in nodeDict for key in (links["node1"], links["node2"])):
             node1ID=nodeDict[links["node1"]]
@@ -117,39 +117,37 @@ def findNodeforIPConf(project):
     netmask = "255.255.255.0"
     broadcast = "192.168.122.255"
     summary = project.nodes_summary(is_print=False)
-    
+
     for nodeInConfig in CONFIG["nodes"]:
+        if nodeInConfig["appliance_name"] == "Test" and nodeInConfig["node_name"] == "Test1":
+            input("Press <ENTER> to start perturbation...")
+
         if "ip" in nodeInConfig:
             ip = nodeInConfig["ip"]
             gw = nodeInConfig["gw"]
             #print(nodeInConfig["node_name"])
             for nodeInSummary in summary:
                 if nodeInConfig["node_name"] in nodeInSummary[0]:
-                    # if nodeInConfig["appliance_name"] == "Test":
-                        # if nodeInConfig["node_name"] == "TestNode1":
-                        #     input("Press <ENTER> to start perturbation...")
+                    
 
                     telnet = configureIP(ip, netmask, broadcast, gw, nodeInSummary[2])
                     runService(telnet, nodeInConfig["node_name"])    
-                        
+
+        print("[STATUS]",  nodeInConfig["node_name"], "has started...OK")                
                 #else:
                  #   print(template[4])
 
 
-def configureIP(ip, netmask, broadcast, gateway, port):
-    #nginxProxyIP = "192.168.122.5"
+def configureIP(ip, netmask, broadcast, gateway, consolePort):
     try:
-        telnet = Telnet(CONFIG["gns3_server"], port)
-        # if service == "Keycloak" or service == "Hls" or service == "Test":
-        #     cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf\nup echo '+ nginxProxyIP +' hls.gns3.fr >> /etc/hosts"'
-        # else:
-        cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
-        telnet.write(("echo -e "+cmdIP+" > /etc/network/interfaces\r\n").encode())
-        time.sleep(2) # should have wait before 2 commands, otherwise the file not changed.
-        telnet.write(b"/etc/init.d/networking restart\r\n")                   
+        telnet = Telnet(CONFIG["gns3_server"], consolePort)
     except:
         print("Unable to connect to Telnet server: ", sys.exc_info()[0])
 
+    cmdIP = 'auto "eth0\niface eth0 inet static\naddress '+ip+'\nnetmask '+netmask+'\nbroadcast '+broadcast+'\ngateway '+gateway+'\nup echo nameserver '+gateway+' > /etc/resolv.conf"'
+    telnet.write(("echo -e "+cmdIP+" > /etc/network/interfaces\r\n").encode())
+    time.sleep(2) # should have wait before 2 commands, otherwise the file not changed.
+    telnet.write(b"/etc/init.d/networking restart\r\n")
     return telnet
     
 ### appliance_name in config.yml is assumed as the service name    
@@ -170,7 +168,6 @@ def runService(telnet, service):
             #     telnet.write(str(commands["command2"]).encode())
             
             telnet.write(str(commands["command"]).encode())
-            print("[STATUS]",  service, "has started...OK")
     
     telnet.close()
 
@@ -199,9 +196,9 @@ if __name__ == "__main__":
     time.sleep(1)
 
     ### Check appliance existance
-    print("[3/6] Checking appliances...", end="")
-    #checkAppliance(server)
-    print("OK")
+    # print("[3/6] Checking appliances...", end="")
+    # checkAppliance(server)
+    # print("OK")
     #time.sleep(1)
 
     ### Create nodes

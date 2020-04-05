@@ -33,6 +33,9 @@ commands:
   - name: AlertManager
     workdir: "cd /usr/src/alertmanager\r\n"
     command: "/usr/src/alertmanager/alertmanager --config.file=/usr/src/alertmanager/alertmanager.yml --storage.path=/usr/src/alertmanager\r\n"
+  - name: Pushgateway
+    workdir: "cd /usr/src/app\r\n"
+    command: "/usr/src/app/pushgateway --web.listen-address=':9091' --web.telemetry-path='/metrics'\r\n"
   - name: Prometheus
     workdir: "cd /usr/src/\r\n"
     command: "/usr/src/prometheus/prometheus --config.file=/usr/src/prometheus/prometheus.yml --web.console.templates=/usr/src/prometheus/consoles --web.console.libraries=/usr/src/prometheus/console_libraries\r\n"
