@@ -5,9 +5,7 @@ import yaml
 import time
 import sys
 import os
-# import system
 import json
-
 
 global CONFIG
 global COMMAND
@@ -40,7 +38,6 @@ def createProject(server, project):
     return projectObj
 
 def deleteProject(id):
-    #server = Gns3Connector(url="http://"+CONFIG["gns3_server"]+":"+CONFIG["gns3_port"])
     server.delete_project(id)
 
 def checkAppliance(server):
@@ -69,14 +66,7 @@ def createNodes(server, projectID):
 
 def setContainerName(node, projectID):
     cmdSetContainerName = "curl --unix-socket /var/run/docker.sock -X POST http:/v1.39/containers/"+node.properties["container_id"]+"/rename?name="+node.name+"\n"
-    #cmd = "curl --unix-socket /var/run/docker.sock 'http:/v1.39/containers/"+node.properties["container_id"]+"/json'\n"
-    #env = '{"environment": "VIRTUAL_HOST=hls.diverse.fr"}'
-    #cmdUpdateVariable = "curl -i -X PUT 'http://localhost:3080/v2/compute/projects/a1e920ca-338a-4e9f-b363-aa607b09dd80/docker/nodes/1a59fa68-aef8-4220-9262-01d2063817a0' -d '"+ env +"'"
     os.system(cmdSetContainerName)
-    # os.system(cmd)
-
-#def container(node):
-    #cmd = 
 
 def createLinks(server, projectID, nodeDict):
     # filterDict = {}  
@@ -125,18 +115,12 @@ def findNodeforIPConf(project):
         if "ip" in nodeInConfig:
             ip = nodeInConfig["ip"]
             gw = nodeInConfig["gw"]
-            #print(nodeInConfig["node_name"])
             for nodeInSummary in summary:
-                if nodeInConfig["node_name"] in nodeInSummary[0]:
-                    
-
+                if nodeInConfig["node_name"] == nodeInSummary[0]:
                     telnet = configureIP(ip, netmask, broadcast, gw, nodeInSummary[2])
                     runService(telnet, nodeInConfig["node_name"])    
 
         print("[STATUS]",  nodeInConfig["node_name"], "has started...OK")                
-                #else:
-                 #   print(template[4])
-
 
 def configureIP(ip, netmask, broadcast, gateway, consolePort):
     try:
@@ -152,11 +136,6 @@ def configureIP(ip, netmask, broadcast, gateway, consolePort):
     
 ### appliance_name in config.yml is assumed as the service name    
 def runService(telnet, service):
-    # if "Keycloak" in service:
-    #     time.sleep(15)
-    # else:
-    #     time.sleep(5)
-
     for commands in COMMAND["commands"]:
         if commands["name"] in service:
             #if "Hls" in service or "Test" in service:
@@ -183,6 +162,7 @@ if __name__ == "__main__":
     print("[1/6] Connecting to server...", end="")
     server = Gns3Connector(url="http://"+CONFIG["gns3_server"]+":"+CONFIG["gns3_port"]) 
     getVersion(server)
+    time.sleep(0.5)
     print("OK")
     time.sleep(1)
     #input("Press <ENTER> to continue...")
@@ -192,14 +172,16 @@ if __name__ == "__main__":
     ### Create project and get its ID
     print("[2/6] Creating GNS3 project...", end="")
     projectObj = createProject(server, CONFIG["project_name"])
+    time.sleep(0.5)
     print("OK")
     time.sleep(1)
 
     ### Check appliance existance
-    # print("[3/6] Checking appliances...", end="")
-    # checkAppliance(server)
-    # print("OK")
-    #time.sleep(1)
+    print("[3/6] Checking appliances...", end="")
+    checkAppliance(server)
+    time.sleep(0.5)
+    print("OK")
+    time.sleep(1)
 
     ### Create nodes
     print("[4/6] Creating nodes...", end="")
